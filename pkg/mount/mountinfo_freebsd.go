@@ -30,26 +30,5 @@ func parseMountTable(filter FilterFunc) ([]*Info, error) {
 	header.Data = uintptr(unsafe.Pointer(rawEntries))
 
 	var out []*Info
-	for _, entry := range entries {
-		var mountinfo Info
-		var skip, stop bool
-		mountinfo.Mountpoint = C.GoString(&entry.f_mntonname[0])
-
-		if filter != nil {
-			// filter out entries we're not interested in
-			skip, stop = filter(p)
-			if skip {
-				continue
-			}
-		}
-
-		mountinfo.Source = C.GoString(&entry.f_mntfromname[0])
-		mountinfo.Fstype = C.GoString(&entry.f_fstypename[0])
-
-		out = append(out, &mountinfo)
-		if stop {
-			break
-		}
-	}
 	return out, nil
 }
